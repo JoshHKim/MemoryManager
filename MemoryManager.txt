@@ -1,0 +1,86 @@
+﻿Synopsis
+        The goal of this project was to implement a memory manager
+
+
+Description
+        class Block
+                Represents a block of memory and holds address, size, and empty or allocated
+
+
+        MemoryManager(unsigned wordSize, std::function allocator)
+                Initializes the object by storing wordSize and allocator and setting default values
+
+
+        ~MemoryManager()
+                Calls the shutdown function which cleans up allocated memory
+
+
+        initialize(size_t sizeInWords)
+                Checks if it’s already been initialized and changes variables to reflect this. Allocates memory of appropriate size, stores sizeInWords as class attribute, adds initial chunk of unused memory to vector of blocks, v_blocks
+
+
+        shutdown() 
+                Checks if object has already been shutdown, if not frees allocated memory, change hasShutdown to true and empties v_blocks              
+                
+        allocate(size_t sizeInBytes)
+                Calculates sizeInWords by dividing sizeInBytes by wordSize, then gets offset with the allocator function passing in the list from getList(). Uses a while loop to iterate through v_blocks to get the position of the block from the offset and insert the block into v_blocks. Then erases the hole if the hole is filled completely or modifies the hole to a new address and size.
+
+
+        free(void *address)
+                Iterates through v_blocks to find the block corresponding to the address. Considers four cases where the previous and next block are/aren’t allocated. Merges sequential empty blocks where necessary and erases original block.
+
+
+        setAllocator(std::function allocator)
+                Changes allocator function to passed allocator
+
+
+        dumpMemoryMap(char *filename)
+                Gets list from getList() and iterates through list, adding to string temp to get the list in proper format. Opens the given file and writes the string to it and then closes the file.
+
+
+        getList()
+                Iterates through v_blocks to get numHoles and creates array list to be returned. Iterates through v_blocks, keeping a running total of offset in words and if the given block is not allocated, saves size and offset to list.
+
+
+        getBitmap() 
+                Iterates through v_blocks to get a bitmap of 1s and 0s for each word. Then adds the calculated size in a uint8_t array and iterates through the bitmap in chunks of 8 to get the value for the array
+
+
+        getWordSize() 
+                Returns stored variable wordSize
+
+
+        getMemoryStart() 
+                Returns stored variable m_start
+
+
+        getMemoryLimit()
+                Returns stored variable numBlocks multiplied by wordSize for total memory size
+
+
+         bestFit(int sizeInWords, void *list)
+                Iterates through the list of holes, keeping a running total of wordOffset and returns the block with greatest difference between the size of the hole and sizeInWords
+
+
+         worstFit(int sizeInWords, void *list)
+                Iterates through the list of holes, keeping a running total of wordOffset and returns the block with smallest difference between the size of the hole and sizeInWords
+
+
+TESTING
+        I tested my program with the given tests CommandLineTest.cpp. Once I got full points, I ran my program with valgrind to check for any memory leaks. Originally there were leaks when I used getList() in other functions, but making sure to delete[] after using the list fixed this issue.
+
+
+BUGS
+        No known bugs
+
+
+LINK
+        https://youtu.be/F7k0ZpFvNpg 
+
+
+REFERENCES/CITATIONS
+        https://valgrind.org/                
+
+
+AUTHOR
+        Joshua Kim
